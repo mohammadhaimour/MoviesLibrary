@@ -1,5 +1,59 @@
 
 
+# Movies-Library - Project 03
+
+**mohmmad**
+
+# Task13
+## WRRC
+![WRRC](./image/task13.PNG)
+
+## Overview
+
+## Getting Started
+
+1. Created a new branch called Task13
+
+2.  Setup my database environment.
+
+3. In Postgres Database  Created a new database called "movie_db".
+
+
+4. In VS Created a file called "schema.sql" and inside it created a tabel called "movie_tab".
+
+5. Connecting the database with the table.
+
+6. Install the required packages:"npm install pg" and  .
+
+
+7. create a new client instance and connect to my database.
+
+8. create a post request to save a specific movie to database .
+
+9. Create a get request to get all the data from the database
+
+
+## Project Features
+<!-- What are the features included in you app -->
+<hr>
+<br>
+
+### What observations or questions do you have about what you’ve learned so far?
+i need more time for study Lessons taken
+
+### How long did it take you to complete this assignment? And, before you started, how long did you think it would take you to complete this assignment?
+2 day
+
+<hr>
+<br>
+
+
+
+
+
+
+
+
 # Movies-Library - Project 02
 
 **mohmmad**

@@ -1,18 +1,26 @@
+//-
 'use strict'
+const url = "postgres://mohammad:0000@localhost:5432/movie_db";
+
 const express = require('express');//require the package
 const cores = require('cors');
+const bodyParser = require('body-parser');
 const axios = require('axios').default;
 require('dotenv').config();
-const PORT = 3005;
+const PORT = 3000;
 const apiKey = process.env.API_KEY;
+const { Client } = require('pg');
+const client = new Client(url);
 const app = express();//create an express app 
 app.use(cores());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 const movieData = require('./Movie Data/data.json');
 
 
 
 //route
-app.listen(PORT, handleListener);
+// app.listen(PORT, handleListener);
 app.get('/favorite', handleFavorite);
 app.get('/', handleData);
 app.use('/error', (req, res) => res.send(error()));
@@ -23,6 +31,58 @@ app.get('/search', handleSearch);
 app.get('/id', handleId);
 app.get('/image', handleImage);
 app.get('/similar', handleSimilar);
+//-----------
+app.post("/addMovie", handelAdd);
+app.get("/getMovies", handelGet);
+app.use(handelError);
+
+
+//function3
+function handelAdd(req, res) {
+    // console.log(req.body);
+    // res.send("adding to db");
+    // let name = req.body.title;
+    // let time = req.body.time;
+    // let summury = req.body.summary;
+    // let image = req.body.image;
+    const { name, time, summury, image } = req.body;
+    let sql = 'INSERT INTO movie_tab(name,time,summary,image) VALUES($1, $2, $3, $4) RETURNING *;';
+    let values = [name, time, summury, image];
+    client.query(sql, values).then((result) => {
+        console.log(result.rows);
+        return res.status(201).json(result.rows[0]);
+    }).catch();
+
+}
+
+function handelGet(req, res) {
+    let sql = 'SELECT * from movie_tab;';
+    client.query(sql).then((result) => {
+        console.log(result);
+        res.json(result.rows);
+    }).catch((err) => {
+        handelError(err, req, res);
+    });
+
+}
+
+function handelError(error, req, res) {
+    res.status(500).send(error);
+
+}
+
+// after connection to db, start the server
+client.connect().then(() => {
+
+    app.listen(PORT, () => {
+        console.log(`Server is listening ${PORT}`);
+    });
+});
+
+
+
+
+
 
 //function2
 function handleTrending(req, res) {
@@ -134,9 +194,9 @@ function handleSimilar(req, res) {
 
 
 //function1
-function handleListener() {
-    console.log(`i am a live on port ${PORT}`);
-}
+// function handleListener() {
+//     console.log(`i am a live on port ${PORT}`);
+// }
 
 function handleFavorite(reg, res) {
     res.send("Welcom to Favorit page");
@@ -196,3 +256,5 @@ function Trend(id, title, release_date, poster_path, overview) {
     this.poster_path = poster_path;
     this.overview = overview;
 }
+
+
