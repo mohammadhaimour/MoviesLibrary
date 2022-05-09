@@ -34,6 +34,9 @@ app.get('/similar', handleSimilar);
 //-----------
 app.post("/addMovie", handelAdd);
 app.get("/getMovies", handelGet);
+app.get("/getMovies/:id", handelGet2);
+app.put("/UPDATE/:id", handleUpdate);   // UPDATE with params
+app.delete("/DELETE", handleDelete);   // DELETE with quey
 app.use(handelError);
 
 
@@ -65,6 +68,54 @@ function handelGet(req, res) {
     });
 
 }
+function handelGet2(req, res) {
+    const { id } = req.params;
+    let sql = 'SELECT * from movie_tab WHERE id = $1;';
+    let value = [id];
+    client.query(sql, value).then((result) => {
+        console.log(result);
+        res.json(result.rows);
+    }).catch((err) => {
+        handelError(err, req, res);
+    });
+
+}
+
+
+function handleUpdate(req, res) {
+    const { id } = req.params;
+    const { name, time, summary, image } = req.body;
+
+    let sql = `UPDATE movie_tab  SET name = $1, time = $2, summary = $3, image = $4 WHERE id = $5 RETURNING *;`
+    let values = [name, time, summary, image, id];
+
+    client.query(sql, values).then(result => {
+        console.log(result.rows);
+        res.send("working");
+        // res.json(result.rows[0]);
+    }
+
+    ).catch();
+
+}
+
+// http://localhost:3000/DELETE?id=1
+function handleDelete(req, res) {
+    const { id } = req.query
+    let sql = 'DELETE FROM movie_tab WHERE id=$1;'
+    let value = [id];
+    client.query(sql, value).then(result => {
+        console.log(result);
+        res.send("deleted");
+    }
+    ).catch(error => {
+        console.log(error);
+    })
+}
+
+
+
+
 
 function handelError(error, req, res) {
     res.status(500).send(error);
