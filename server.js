@@ -7,10 +7,18 @@ const cores = require('cors');
 const bodyParser = require('body-parser');
 const axios = require('axios').default;
 require('dotenv').config();
-const PORT = 3000;
+const PORT = process.env.PORT;
 const apiKey = process.env.API_KEY;
 const { Client } = require('pg');
-const client = new Client(url);
+//const client = new Client(url);
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
+
+
+
+
 const app = express();//create an express app 
 app.use(cores());
 app.use(bodyParser.urlencoded({ extended: false }));
