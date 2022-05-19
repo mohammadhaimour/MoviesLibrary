@@ -1,7 +1,7 @@
 //-
 'use strict'
 const url = "postgres://mohammad:0000@localhost:5432/movie_db";
-
+//jjj
 const express = require('express');//require the package
 const cores = require('cors');
 const bodyParser = require('body-parser');
@@ -10,7 +10,7 @@ require('dotenv').config();
 const PORT = process.env.PORT;
 const apiKey = process.env.API_KEY;
 const { Client } = require('pg');
-//const client = new Client(url);
+// const client = new Client(url);
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
@@ -56,9 +56,9 @@ function handelAdd(req, res) {
     // let time = req.body.time;
     // let summury = req.body.summary;
     // let image = req.body.image;
-    const { name, time, summury, image } = req.body;
-    let sql = 'INSERT INTO movie_tab(name,time,summary,image) VALUES($1, $2, $3, $4) RETURNING *;';
-    let values = [name, time, summury, image];
+    const { name, time, summury, image, comment } = req.body;
+    let sql = 'INSERT INTO movie_tab(name,time,summary,image,comment) VALUES($1, $2, $3, $4, $5) RETURNING *;';
+    let values = [name, time, summury, image, comment];
     client.query(sql, values).then((result) => {
         console.log(result.rows);
         return res.status(201).json(result.rows[0]);
