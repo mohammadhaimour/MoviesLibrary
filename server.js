@@ -1,7 +1,7 @@
 //-
 'use strict'
 const url = "postgres://mohammad:0000@localhost:5432/movie_db";
-//jjj
+
 const express = require('express');//require the package
 const cores = require('cors');
 const bodyParser = require('body-parser');
